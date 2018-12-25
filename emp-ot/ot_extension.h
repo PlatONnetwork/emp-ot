@@ -1,27 +1,33 @@
 #ifndef OT_EXTENSION_H__
 #define OT_EXTENSION_H__
+
 #include "emp-ot/ot.h"
+#ifndef OT_NP_USE_MIRACL
+#include "emp-ot/miracl_np_ot.h"
+#else
+#include "emp-ot/np.h"
+#endif//
+
 /** @addtogroup OT
     @{
   */
 namespace emp {
-template<typename IO, template<typename> class BaseOT, template<typename> class OTE>
-class OTExtension: public OT<OTExtension<IO, BaseOT, OTE>> { public:
-	BaseOT<IO> * base_ot;
+class OTExtension: public OT { public:
+	OT * base_ot;
 	PRG prg;
 	const int l = 128;
-	const int block_size = 1024*16;
+	const static int block_size = 1024*16;
 
 	block *k0 = nullptr, *k1 = nullptr, 
 			* qT  = nullptr, *tT = nullptr, *tmp = nullptr, block_s;
 	PRG *G0, *G1;
 	bool *s = nullptr, * extended_r = nullptr, setup = false;
-	IO *io = nullptr;
+	IOChannel *io = nullptr;
 	int ssp;
-	OTExtension(IO * io, int ssp = 0) {
+	OTExtension(IOChannel *io, int ssp = 0) {
 		this->io = io;
 		this->ssp = ssp;
-		base_ot = new BaseOT<IO>(io);
+		base_ot = new OTNP(io);
 		s = new bool[l];
 		k0 = new block[l];
 		k1 = new block[l];
@@ -127,13 +133,13 @@ class OTExtension: public OT<OTExtension<IO, BaseOT, OTE>> { public:
 		delete[] r2;
 	}
 
-	void send_impl(const block* data0, const block* data1, int length) {
-		static_cast<OTE<IO>*>(this)->send_impl(data0, data1, length);
-	}
+	// void send(const block* data0, const block* data1, int length) {
+	// 	static_cast<OTE<IO>*>(this)->send_impl(data0, data1, length);
+	// }
 
-	void recv_impl(block* data, const bool* b, int length) {
-		static_cast<OTE<IO>*>(this)->recv_impl(data, b, length);
-	}
+	// void recv(block* data, const bool* b, int length) {
+	// 	static_cast<OTE<IO>*>(this)->recv_impl(data, b, length);
+	// }
 
 };
   /**@}*/

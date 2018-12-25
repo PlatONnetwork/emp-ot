@@ -1,6 +1,7 @@
+#ifndef OT_NP_USE_MIRACL
 #ifndef DELTA_OT_H__
 #define DELTA_OT_H__
-#include "co.h"
+#include "emp-ot/co.h"
 #include <boost/align/aligned_alloc.hpp>
 #include <immintrin.h>
 namespace emp {
@@ -38,8 +39,8 @@ public:
 #endif
 
 	block *pre_table = nullptr;
-	NetIO * io = nullptr;
-	OTCO<NetIO> * base_ot = nullptr;
+	IOChannel * io = nullptr;
+	OTCO* base_ot = nullptr;
 	PRG prg, *G0 = nullptr, *G1 = nullptr;
 	PRP pi;
 	bool setup = false;
@@ -50,11 +51,11 @@ public:
 	block Delta;
 	int l = 128, ssp, sspover8;
 	const static int block_size = 1024;
-	DeltaOT(NetIO * io, block * pretable, int ssp = 40) {
+	DeltaOT(IOChannel * io, block * pretable, int ssp = 40) {
 		this->pre_table = pretable;
 		this->io = io;
 		this->ssp = ssp;
-		this->base_ot = new OTCO<NetIO>(io);
+		this->base_ot = new OTCO(io);
 		this->sspover8 = ssp/8;
 		this->l +=ssp;
 		this->s = new bool[l];
@@ -270,3 +271,4 @@ public:
 };
 }
 #endif// ABIT_H__
+#endif// OT_NP_USE_MIRACL

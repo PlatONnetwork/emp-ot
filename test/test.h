@@ -3,8 +3,8 @@
 #include <iostream>
 using namespace emp;
 
-template <typename IO, template <typename> class T>
-double test_ot(IO *io, int party, int length) {
+template <typename T>
+double test_ot(IOChannel *io, int party, int length) {
   block *b0 = new block[length], *b1 = new block[length],
         *r = new block[length];
   PRG prg(fix_key);
@@ -15,7 +15,7 @@ double test_ot(IO *io, int party, int length) {
 
   io->sync();
   auto start = clock_start();
-  T<IO> *ot = new T<IO>(io);
+  T *ot = new T(io);
   if (party == ALICE) {
     ot->send(b0, b1, length);
   } else {
@@ -44,8 +44,8 @@ double test_ot(IO *io, int party, int length) {
 // length is the number of OT's, *not* the length of each message
 // (each message is usually one block--but, in this case, each
 // is a single bit: the LSB of each block)
-template <typename IO, template <typename, int> class T, int N_BITS>
-double test_bit_ot(IO *io, int party, int length) {
+template <template <int> class T, int N_BITS>
+double test_bit_ot(IOChannel *io, int party, int length) {
   if (party == ALICE)
     std::cout << "Testing: " << length << " many " << N_BITS << "-bit OT's\n";
   block *b0 = new block[length], *b1 = new block[length],
@@ -58,7 +58,7 @@ double test_bit_ot(IO *io, int party, int length) {
 
   io->sync();
   auto start = clock_start();
-  T<IO, N_BITS> *ot = new T<IO, N_BITS>(io);
+  T<N_BITS> *ot = new T<N_BITS>(io);
   if (party == ALICE) {
     ot->send(b0, b1, length);
   } else {
@@ -133,8 +133,8 @@ double test_bit_ot(IO *io, int party, int length) {
   return t;
 }
 
-template <typename IO, template <typename> class T>
-double test_cot(NetIO *io, int party, int length) {
+template <typename T>
+double test_cot(IOChannel *io, int party, int length) {
   block *b0 = new block[length], *r = new block[length];
   bool *b = new bool[length];
   block delta;
@@ -144,7 +144,7 @@ double test_cot(NetIO *io, int party, int length) {
 
   io->sync();
   auto start = clock_start();
-  T<IO> *ot = new T<IO>(io);
+  T *ot = new T(io);
   if (party == ALICE) {
     ot->send_cot(b0, delta, length);
   } else {
@@ -175,8 +175,8 @@ double test_cot(NetIO *io, int party, int length) {
   return t;
 }
 
-template <typename IO, template <typename> class T>
-double test_rot(IO *io, int party, int length) {
+template <typename T>
+double test_rot(IOChannel* io, int party, int length) {
   block *b0 = new block[length], *r = new block[length];
   block *b1 = new block[length];
   bool *b = new bool[length];
@@ -185,7 +185,7 @@ double test_rot(IO *io, int party, int length) {
 
   io->sync();
   auto start = clock_start();
-  T<IO> *ot = new T<IO>(io);
+  T *ot = new T(io);
   if (party == ALICE) {
     ot->send_rot(b0, b1, length);
   } else {

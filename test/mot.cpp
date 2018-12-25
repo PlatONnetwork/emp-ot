@@ -1,9 +1,10 @@
 #include <iostream>
 #include "test/test.h"
+#include "emp-ot/mextension_kos.h"
 using namespace std;
 
-template<typename IO, template<typename>class T>
-double test_cot_mal(NetIO * io, int party, int length) {
+template<typename T>
+double test_cot_mal(IOChannel * io, int party, int length) {
 	block *b0 = new block[length], *r = new block[length];
 	bool *b = new bool[length];
 	block *delta = new block[length];
@@ -13,7 +14,7 @@ double test_cot_mal(NetIO * io, int party, int length) {
 	
 	io->sync();
 	auto start = clock_start();
-	T<IO>* ot = new T<IO>(io);
+	T* ot = new T(io);
 	if (party == ALICE) {
 		ot->send_cot(b0, delta, length);
 	} else {
@@ -46,12 +47,17 @@ double test_cot_mal(NetIO * io, int party, int length) {
 }
 
 int main(int argc, char** argv) {
+#ifndef OT_NP_USE_MIRACL
 	int port, party, length = 1<<24;
 	parse_party_and_port(argv, 2, &party, &port);
-	NetIO * io = new NetIO(party==ALICE ? nullptr:"127.0.0.1", port);
-	cout <<"COOT\t"<<10000.0/test_ot<NetIO, OTCO>(io, party, 10000)*1e6<<" OTps"<<endl;
-	cout <<"Malicious OT Extension\t"<<double(length)/test_ot<NetIO, MOTExtension>(io, party, length)*1e6<<" OTps"<<endl;
-	cout <<"Malicious COT Extension\t"<<double(length)/test_cot_mal<NetIO, MOTExtension>(io, party, length)*1e6<<" OTps"<<endl;
-   cout <<"Malicious ROT Extension\t"<<double(length)/test_rot<NetIO, MOTExtension>(io, party, length)*1e6<<" OTps"<<endl;
+	IOChannel * io = new NetIO(party==ALICE ? nullptr:"127.0.0.1", port);
+	cout <<"COOT\t"<<10000.0/test_ot<OTCO>(io, party, 10000)*1e6<<" OTps"<<endl;
+	cout <<"Malicious OT Extension\t"<<double(length)/test_ot<MOTExtension_KOS>(io, party, length)*1e6<<" OTps"<<endl;
+	cout <<"Malicious COT Extension\t"<<double(length)/test_cot_mal<MOTExtension_KOS>(io, party, length)*1e6<<" OTps"<<endl;
+    cout <<"Malicious ROT Extension\t"<<double(length)/test_rot<MOTExtension_KOS>(io, party, length)*1e6<<" OTps"<<endl;
 	delete io;
+#else
+	cerr << "Not support for miracl version !" << endl;
+#endif//
+	return 0;
 }

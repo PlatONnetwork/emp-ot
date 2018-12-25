@@ -15,16 +15,20 @@
 #include "emp-ot/lattice.h"
 #endif
 
-#include "emp-ot/co.h"
+
+#ifndef OT_NP_USE_MIRACL
 #include "emp-ot/np.h"
+#include "emp-ot/co.h"
+#include "emp-ot/mextension_kos.h"
+#include "emp-ot/mextension_alsz.h"
+#include "emp-ot/deltaot.h"
+using MOTExtension = emp::MOTExtension_KOS;
+#else
+#include "emp-ot/miracl_np_ot.h"
+#endif
 
 #include "emp-ot/shextension.h"
 #include "emp-ot/ot_extension.h"
-#include "emp-ot/mextension_kos.h"
-#include "emp-ot/mextension_alsz.h"
 
-#include "emp-ot/deltaot.h"
 
-template<typename IO>
-using MOTExtension = emp::MOTExtension_KOS<IO>;
 //typedef MOTExtension_ALSZ MOTExtension;
