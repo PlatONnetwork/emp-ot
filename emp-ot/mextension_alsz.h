@@ -1,15 +1,17 @@
+#ifndef OT_NP_USE_MIRACL
+
 #ifndef OT_M_EXTENSION_ALSZ_H__
 #define OT_M_EXTENSION_ALSZ_H__
 #include "emp-ot/ot.h"
 #include "emp-ot/co.h"
+#include "emp-ot/ot_extension.h"
 
 /** @addtogroup OT
     @{
   */
 namespace emp {
-template<typename IO>
-class MOTExtension_ALSZ: public OT<MOTExtension_ALSZ<IO>> { public:
-	OTCO<IO> * base_ot;
+class MOTExtension_ALSZ: public OT { public:
+	OTCO * base_ot;
 	PRG prg;
 	PRP pi;
 	int l, ssp;
@@ -22,12 +24,12 @@ class MOTExtension_ALSZ: public OT<MOTExtension_ALSZ<IO>> { public:
 	bool setup = false;
 	bool committing = false;
 	char com[Hash::DIGEST_SIZE];
-	IO* io = nullptr;
-	MOTExtension_ALSZ(IO * io, bool committing = false, int ssp = 40): ssp(ssp){
+	IOChannel* io = nullptr;
+	MOTExtension_ALSZ(IOChannel * io, bool committing = false, int ssp = 40): ssp(ssp){
 		this->io = io;
 		this->l = 192;
 		u = 2;
-		this->base_ot = new OTCO<IO>(io);
+		this->base_ot = new OTCO(io);
 		this->s = new bool[l];
 		this->k0 = new block[l];
 		this->k1 = new block[l];
@@ -251,7 +253,7 @@ class MOTExtension_ALSZ: public OT<MOTExtension_ALSZ<IO>> { public:
 		return cheat;
 	}
 
-	void send_impl(const block* data0, const block* data1, int length) {
+	void send(const block* data0, const block* data1, int length) {
 		ot_extension_send_pre(length);
 		if (ot_extension_send_check(length)) {
       std::cerr << "ot_extension_send_check failed" << std::endl;
@@ -261,7 +263,7 @@ class MOTExtension_ALSZ: public OT<MOTExtension_ALSZ<IO>> { public:
 		ot_extension_send_post(data0, data1, length);
 	}
 
-	void recv_impl(block* data, const bool* b, int length) {
+	void recv(block* data, const bool* b, int length) {
 		ot_extension_recv_pre(data, b, length);
 		ot_extension_recv_check(length);
 		delete[] t[0];
@@ -295,3 +297,4 @@ class MOTExtension_ALSZ: public OT<MOTExtension_ALSZ<IO>> { public:
   /**@}*/
 }
 #endif// OT_M_EXTENSION_ALSZ_H__
+#endif// OT_NP_USE_MIRACL

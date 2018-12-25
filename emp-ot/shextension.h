@@ -2,22 +2,28 @@
 #define OT_SH_EXTENSION_H__
 #include "emp-ot/ot.h"
 #include "emp-ot/ot_extension.h"
+
+#ifndef OT_NP_USE_MIRACL
 #include "emp-ot/np.h"
+#else
+#include "emp-ot/miracl_np_ot.h"
+#endif
+
+using std::min;
 /** @addtogroup OT
   @{
  */
 namespace emp {
-template<typename IO>
-class SHOTExtension: public OTExtension<IO, OTNP, emp::SHOTExtension>{ public:
-	SHOTExtension(IO * io) : OTExtension<IO, OTNP, emp::SHOTExtension>(io){
+class SHOTExtension: public OTExtension { public:
+	SHOTExtension(IOChannel * io) : OTExtension(io){
 	}
 	CRH crh;
-	using OTExtension<IO, OTNP, emp::SHOTExtension>::send_pre;
-	using OTExtension<IO, OTNP, emp::SHOTExtension>::recv_pre;
-	using OTExtension<IO, OTNP, emp::SHOTExtension>::qT;
-	using OTExtension<IO, OTNP, emp::SHOTExtension>::tT;
-	using OTExtension<IO, OTNP, emp::SHOTExtension>::io;
-	using OTExtension<IO, OTNP, emp::SHOTExtension>::block_s;
+	// using OTExtension<IO, OTNP, emp::SHOTExtension>::send_pre;
+	// using OTExtension<IO, OTNP, emp::SHOTExtension>::recv_pre;
+	// using OTExtension<IO, OTNP, emp::SHOTExtension>::qT;
+	// using OTExtension<IO, OTNP, emp::SHOTExtension>::tT;
+	// using OTExtension<IO, OTNP, emp::SHOTExtension>::io;
+	// using OTExtension<IO, OTNP, emp::SHOTExtension>::block_s;
 
 	void got_send_post(const block* data0, const block* data1, int length) {
 		const int bsize = AES_BATCH_SIZE/2;
@@ -111,12 +117,12 @@ class SHOTExtension: public OTExtension<IO, OTNP, emp::SHOTExtension>{ public:
 		delete[] tT;
 	}
 
-	void send_impl(const block* data0, const block* data1, int length) {
+	void send(const block* data0, const block* data1, int length) {
 		send_pre(length);
 		got_send_post(data0, data1, length);
 	}
 
-	void recv_impl(block* data, const bool* b, int length) {
+	void recv(block* data, const bool* b, int length) {
 		recv_pre(b, length);
 		got_recv_post(data, b, length);
 	}

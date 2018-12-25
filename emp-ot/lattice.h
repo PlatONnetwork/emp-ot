@@ -134,8 +134,8 @@ void DiscretizedGaussianMatrixModQ(MatrixModQ &result, double stdev) {
 	}
 }
 
-template <typename IO, int NUM_BITS_PER_SENDER_INPUT>
-class OTLattice : public OT<OTLattice<IO, NUM_BITS_PER_SENDER_INPUT>> {
+template <int NUM_BITS_PER_SENDER_INPUT>
+class OTLattice : public OT {
 public:
 	IO *io = nullptr; ///< The `emp::IOChannel<T>` used for communication.
 	PRG prg; ///< `emp::PRG` with a random seed.

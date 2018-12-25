@@ -4,6 +4,7 @@ using namespace emp;
 using namespace std;
 
 int main() {
+#ifndef OT_NP_USE_MIRACL
 		initialize_relic();
 		const eb_t *gtable = eb_curve_get_tab();
 		MemIO io;
@@ -18,4 +19,8 @@ int main() {
 			cout << ","<<data[i]<<"";
 		}
 		cout << "};\n#endif";
+#else
+		cerr << "Not support for miracl version !" << endl;
+#endif//
+		return 0;
 }

@@ -1,18 +1,20 @@
+#ifndef OT_NP_USE_MIRACL
 #ifndef OT_NP_H__
 #define OT_NP_H__
+
 #include "emp-ot/ot.h"
 /** @addtogroup OT
 	@{
 */
-namespace emp {
-template<typename IO>
-class OTNP: public OT<OTNP<IO>> { public:
+namespace emp 
+{
+class OTNP: public OT { public:
 	eb_t g, C;
 	eb_t gTbl[RELIC_EB_TABLE_MAX];
 	bn_t q;
 	PRG prg;
-	IO* io;
-	OTNP(IO* io) {
+	IOChannel* io;
+	OTNP(IOChannel* io) {
 		this->io = io;
 		initialize_relic();
 		eb_curve_get_gen(g);
@@ -26,7 +28,7 @@ class OTNP: public OT<OTNP<IO>> { public:
 		mio.buffer = tmp;
 	}
 
-	void send_impl(const block* data0, const block* data1, int length) {
+	void send(const block* data0, const block* data1, int length) {
 		bn_t d; bn_new(d); prg.random_bn(d);
 		eb_mul_fix_norm(C, gTbl, d);
 		io->send_eb(&C, 1);io->flush();
@@ -76,7 +78,7 @@ class OTNP: public OT<OTNP<IO>> { public:
 		delete[] pk0;
 	}
 
-	void recv_impl(block* data, const bool* b, int length) {
+	void recv(block* data, const bool* b, int length) {
 		bn_t * k = new bn_t[length];
 		eb_t * gr = new eb_t[length];
 		eb_t pk[2];
@@ -120,4 +122,6 @@ class OTNP: public OT<OTNP<IO>> { public:
 };
 /**@}*/
 }
+#endif//OT_NP_USE_MIRACL
+
 #endif// OT_NP_H__

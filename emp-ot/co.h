@@ -1,19 +1,21 @@
+#ifndef OT_NP_USE_MIRACL
+
 #ifndef OT_CO_H__
 #define OT_CO_H__
 #include "emp-ot/ot.h"
+
 /** @addtogroup OT
     @{
   */
 namespace emp {
-template<typename IO>
-class OTCO: public OT<OTCO<IO>> { public:
+class OTCO: public OT { public:
 	int cnt;
 	eb_t g;
 	bn_t q;
 	eb_t gTbl[RELIC_EB_TABLE_MAX];
 	PRG prg;
-	IO* io;
-	OTCO(IO* io) {
+	IOChannel* io;
+	OTCO(IOChannel* io) {
 		this->io = io;
 		initialize_relic();
 		eb_curve_get_gen(g);
@@ -26,8 +28,11 @@ class OTCO: public OT<OTCO<IO>> { public:
 		eb_new(C);
 		mio.buffer = tmp;
 	}
+	~OTCO()
+	{
+	}
 
-	void send_impl(const block* data0, const block* data1, int length) {
+	void send(const block* data0, const block* data1, int length) {
 		bn_t * a = new bn_t[length];
 		eb_t * B = new eb_t[length];
 		eb_t * A = new eb_t[length];
@@ -70,7 +75,7 @@ class OTCO: public OT<OTCO<IO>> { public:
 		delete[] B;
 	}
 
-	void recv_impl(block* data, const bool* b, int length) {
+	void recv(block* data, const bool* b, int length) {
 		bn_t * bb = new bn_t[length];
 		eb_t * B = new eb_t[length];
 		eb_t * A = new eb_t[length];
@@ -114,3 +119,4 @@ class OTCO: public OT<OTCO<IO>> { public:
   /**@}*/
 }
 #endif// OT_CO_H__
+#endif//OT_NP_USE_MIRACL

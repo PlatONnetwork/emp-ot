@@ -9,6 +9,10 @@
 #endif
 using namespace std;
 
+#ifdef OT_NP_USE_MIRACL
+#include "emp-tool/utils/sm2_params.h"
+#endif//
+
 int main(int argc, char **argv) {
 	constexpr int N_BITS = 128;
 	static_assert(N_BITS <= 128 and N_BITS >= 1,
@@ -16,9 +20,13 @@ int main(int argc, char **argv) {
 	int N_TESTS = 128;
 	int port, party;
 	parse_party_and_port(argv, 2, &party, &port);
-	NetIO *io = new NetIO(party == ALICE ? nullptr : "127.0.0.1", port);
 
-	auto time_in_usec = test_bit_ot<NetIO, OTLattice, N_BITS>(io, party, N_TESTS);
+#ifdef OT_NP_USE_MIRACL
+	SM2_Init();
+#endif//
+	IOChannel *io = new NetIO(party == ALICE ? nullptr : "127.0.0.1", port);
+
+	auto time_in_usec = test_bit_ot<OTLattice, N_BITS>(io, party, N_TESTS);
 	if (party == ALICE) {
 		cout << "Lattice OT \t" << double(N_TESTS) * 1e6 / time_in_usec << " OTps"
 		     << endl;
