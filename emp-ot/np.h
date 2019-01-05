@@ -8,7 +8,8 @@
 */
 namespace emp 
 {
-class OTNP: public OT { public:
+class OTNP: public OT { 
+public:
 	eb_t g, C;
 	eb_t gTbl[RELIC_EB_TABLE_MAX];
 	bn_t q;
