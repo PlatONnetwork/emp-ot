@@ -1,6 +1,10 @@
 #include <emp-tool/emp-tool.h>
 #include <iostream>
 
+#ifndef OT_NP_USE_MIRACL
+#include "emp-tool/utils/utils_ec.h"
+using namespace emp;
+#endif
 using namespace std;
 
 int main() {
