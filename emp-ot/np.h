@@ -2,7 +2,9 @@
 #ifndef OT_NP_H__
 #define OT_NP_H__
 
+#include "emp-tool/emp-tool.h"
 #include "emp-ot/ot.h"
+#include "emp-ot/table.h"
 /** @addtogroup OT
 	@{
 */
