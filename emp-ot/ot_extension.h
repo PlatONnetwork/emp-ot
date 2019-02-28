@@ -2,7 +2,8 @@
 #define OT_EXTENSION_H__
 
 #include "emp-ot/ot.h"
-#ifndef OT_NP_USE_MIRACL
+#include "emp-tool/utils/utils.h"
+#ifdef OT_NP_USE_MIRACL
 #include "emp-ot/miracl_np_ot.h"
 #else
 #include "emp-ot/np.h"

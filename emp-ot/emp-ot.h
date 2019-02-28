@@ -17,6 +17,7 @@
 
 
 #ifndef OT_NP_USE_MIRACL
+#include "emp-tool/emp-tool.h"
 #include "emp-ot/np.h"
 #include "emp-ot/co.h"
 #include "emp-ot/mextension_kos.h"

@@ -5,7 +5,7 @@
 #include "emp-ot/ot.h"
 #include "emp-ot/co.h"
 #include "emp-ot/ot_extension.h"
-
+#include <cassert>
 /** @addtogroup OT
     @{
   */

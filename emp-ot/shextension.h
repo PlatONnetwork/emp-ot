@@ -2,6 +2,7 @@
 #define OT_SH_EXTENSION_H__
 #include "emp-ot/ot.h"
 #include "emp-ot/ot_extension.h"
+#include "emp-tool/utils/crh.h"
 
 #ifndef OT_NP_USE_MIRACL
 #include "emp-ot/np.h"
