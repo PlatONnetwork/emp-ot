@@ -1,18 +1,19 @@
 #include "test/test.h"
+#include "emp-tool/io/net_io_channel.h"
 #include <iostream>
 using namespace std;
 
-#ifdef OT_NP_USE_MIRACL
-#include "emp-tool/utils/sm2_params.h"
-#endif//
+//#ifdef OT_NP_USE_MIRACL
+//#include "emp-tool/utils/sm2_params.h"
+//#endif//
 
 int main(int argc, char** argv) {
 	int length = 1<<24, port, party;
 	parse_party_and_port(argv, 2, &party, &port);
 
-#ifdef OT_NP_USE_MIRACL
-	SM2_Init();
-#endif//
+//#ifdef OT_NP_USE_MIRACL
+//	SM2_Init();
+//#endif//
 	
 	IOChannel * io = new NetIO(party==ALICE ? nullptr:"127.0.0.1", port);
 	cout <<"NPOT\t"<<10000.0/test_ot<OTNP>(io, party, 10000)*1e6<<" OTps"<<endl;

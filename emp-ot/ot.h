@@ -1,6 +1,5 @@
 #ifndef OT_H__
 #define OT_H__
-#include <emp-tool/emp-tool.h>
 #include "emp-tool/io/io_channel.h"
 namespace emp {
 

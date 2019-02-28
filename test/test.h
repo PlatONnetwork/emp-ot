@@ -1,6 +1,7 @@
 #include "emp-ot/emp-ot.h"
-#include <emp-tool/emp-tool.h>
+#include "emp-tool/io/net_io_channel.h"
 #include <iostream>
+#include <cassert>
 using namespace emp;
 
 template <typename T>
